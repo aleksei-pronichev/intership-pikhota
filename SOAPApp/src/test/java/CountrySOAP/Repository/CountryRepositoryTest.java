@@ -22,16 +22,31 @@ public class CountryRepositoryTest {
     private CountryRepository countryRepository;
 
     static Stream<Arguments> initCountries() {
+        Country spain = new Country();
+        spain.setName("Spain");
+        spain.setPopulation(46704314);
+        spain.setCapital("Madrid");
+        spain.setCurrency(Currency.EUR);
+
+        Country uk = new Country();
+        uk.setName("United Kingdom");
+        uk.setCapital("London");
+        uk.setCurrency(Currency.GBP);
+        uk.setPopulation(63705000);
+
         return Stream.of(
-                Arguments.of("Spain", new Country("Spain", 46704314, "Madrid", Currency.EUR)),
-                Arguments.of("United Kingdom", new Country("United Kingdom", 63705000, "London", Currency.GBP)));
+                Arguments.of("Spain", spain),
+                Arguments.of("United Kingdom", uk));
     }
 
     @ParameterizedTest
     @MethodSource("initCountries")
     public void findCountryTest(String countryName, Country expectedCountry) {
         Country countryInDB = countryRepository.findCountry(countryName);
-        Assertions.assertEquals(countryInDB, expectedCountry);
+        Assertions.assertEquals(countryInDB.getName(), expectedCountry.getName());
+        Assertions.assertEquals(countryInDB.getCapital(), expectedCountry.getCapital());
+        Assertions.assertEquals(countryInDB.getCurrency(), expectedCountry.getCurrency());
+        Assertions.assertEquals(countryInDB.getPopulation(), expectedCountry.getPopulation());
     }
 
     @Test(expected = IllegalArgumentException.class)
